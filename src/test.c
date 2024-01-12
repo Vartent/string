@@ -183,12 +183,12 @@ START_TEST(test_strncmp_empty) {
 }
 END_TEST
 
-// START_TEST(test_strncmp_0) {
-//   char str_1[13] = "Hello world\0";
-//   char str_2[12] = "Hello world";
-//   ck_assert_int_eq(strncmp(str_1, str_2, 13), s21_strncmp(str_1, str_2, 13));
-// }
-// END_TEST
+START_TEST(test_strncmp_0) {
+  char str_1[13] = "Hello world\0";
+  char str_2[12] = "Hello world ";
+  ck_assert_int_eq(strncmp(str_1, str_2, 13), s21_strncmp(str_1, str_2, 13));
+}
+END_TEST
 
 START_TEST(test_strncmp_first_long) {
   char str_1[21] = "Hello world123467890";
@@ -247,7 +247,7 @@ Suite *str_suite(void) {
   // strncmp
   tc_strncmp = tcase_create("s21_strncmp");
   tcase_add_test(tc_strncmp, test_strncmp_empty);
-  // tcase_add_test(tc_strncmp, test_strncmp_0);
+  tcase_add_test(tc_strncmp, test_strncmp_0);
   tcase_add_test(tc_strncmp, test_strncmp_first_long);
   tcase_add_test(tc_strncmp, test_strncmp_second_long);
   suite_add_tcase(s, tc_strncmp);
