@@ -174,6 +174,35 @@ START_TEST(test_strstr_case_sensitive) {
 }
 END_TEST
 
+START_TEST(test_strstr_match_at_beginning) {
+  char haystack[] = "Hello World";
+  char needle[] = "Hello";
+  ck_assert_str_eq(s21_strstr(haystack, needle), haystack);
+}
+END_TEST
+
+START_TEST(test_strstr_match_at_end) {
+  char haystack[] = "Hello World";
+  char needle[] = "World";
+  ck_assert_str_eq(s21_strstr(haystack, needle), haystack + 6);
+}
+END_TEST
+
+START_TEST(test_strstr_match_in_middle) {
+  char haystack[] = "Hello World";
+  char needle[] = "lo Wo";
+  ck_assert_str_eq(s21_strstr(haystack, needle), haystack + 3);
+}
+END_TEST
+
+START_TEST(test_strstr_multiple_matches) {
+  char haystack[] = "Hello Hello Hello";
+  char needle[] = "Hello";
+  ck_assert_str_eq(s21_strstr(haystack, needle), haystack);
+}
+END_TEST
+
+
 // s21_strncmp
 
 START_TEST(test_strncmp_empty) {
@@ -233,10 +262,41 @@ START_TEST(test_strpbrk_multiple_matches) {
   ck_assert_ptr_eq(s21_strpbrk(str_1, str_2), strpbrk(str_1, str_2));
 }
 
+// s21_strcspn
+
+START_TEST(test_strcspn_no_match) {
+  char str1[7] = "abcdef";
+  char str2[2] = "x";
+  ck_assert_int_eq(strcspn(str1, str2), s21_strcspn(str1, str2));
+}
+END_TEST
+START_TEST(test_strcspn_match_end) {
+  char str1[7] = "abcdef";
+  char str2[2] = "f";
+  ck_assert_int_eq(strcspn(str1, str2), s21_strcspn(str1, str2));
+}
+END_TEST
+START_TEST(test_strcspn_match_start) {
+  char str1[7] = "abcdef";
+  char str2[2] = "a";
+  ck_assert_int_eq(strcspn(str1, str2), s21_strcspn(str1, str2));
+}
+END_TEST
+START_TEST(test_strcspn_empty_str1) {
+  char str1[1] = "";
+  char str2[2] = "x";
+  ck_assert_int_eq(strcspn(str1, str2), s21_strcspn(str1, str2));
+}
+END_TEST
+START_TEST(test_strcspn_empty_str2) {
+  char str1[7] = "abcdef";
+  char str2[1] = "";
+  ck_assert_int_eq(strcspn(str1, str2), s21_strcspn(str1, str2));
+}
 
 Suite *str_suite(void) {
   Suite *s;
-  TCase *tc_strlen, *tc_strncpy, *tc_strncat, *tc_strstr, *tc_strncmp, *tc_strbrk;
+  TCase *tc_strlen, *tc_strncpy, *tc_strncat, *tc_strstr, *tc_strncmp, *tc_strcspn, *tc_strbrk;
 
   s = suite_create("String");
 
@@ -272,7 +332,10 @@ Suite *str_suite(void) {
   tcase_add_test(tc_strstr, test_strstr_not_found);
   tcase_add_test(tc_strstr, test_strstr_found);
   tcase_add_test(tc_strstr, test_strstr_case_sensitive);
-
+  tcase_add_test(tc_strstr, test_strstr_match_at_beginning);
+  tcase_add_test(tc_strstr, test_strstr_match_at_end);
+  tcase_add_test(tc_strstr, test_strstr_match_in_middle);
+  tcase_add_test(tc_strstr, test_strstr_multiple_matches);
   suite_add_tcase(s, tc_strstr);
 
   // strncmp
@@ -290,6 +353,14 @@ Suite *str_suite(void) {
   tcase_add_test(tc_strncpy, test_strpbrk_no_match);
   tcase_add_test(tc_strncpy, test_strpbrk_multiple_matches);
   suite_add_tcase(s, tc_strbrk);
+  // strcspn
+  tc_strcspn = tcase_create("s21_strcspn");
+  tcase_add_test(tc_strcspn, test_strcspn_no_match);
+  tcase_add_test(tc_strcspn, test_strcspn_match_end);
+  tcase_add_test(tc_strcspn, test_strcspn_match_start);
+  tcase_add_test(tc_strcspn, test_strcspn_empty_str1);
+  tcase_add_test(tc_strcspn, test_strcspn_empty_str2);
+  suite_add_tcase(s, tc_strcspn);
 
   return s;
 }
