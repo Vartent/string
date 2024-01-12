@@ -1,0 +1,18 @@
+        -:    0:Source:s21_strpbrk.c
+        -:    1:#include <string.h>
+        -:    2:
+        -:    3:#include "s21_string.h"
+        -:    4:
+    #####:    5:char *s21_strpbrk(const char *str1, const char *str2) {
+    #####:    6:  char *res = S21_NULL;
+    #####:    7:  if (str1 != S21_NULL && str2 == S21_NULL) {
+    #####:    8:    while (*str1) {
+    #####:    9:      if (strchr(str2, *str1)) { //ЗАМЕНИТЬ НА НАШ СТРЧАР
+    #####:   10:        res = (char *)str1;
+    #####:   11:        break;
+        -:   12:      }
+    #####:   13:      str1++;
+        -:   14:    }
+        -:   15:  }
+    #####:   16:  return res;
+        -:   17:}

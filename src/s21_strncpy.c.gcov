@@ -1,0 +1,21 @@
+        -:    0:Source:s21_strncpy.c
+        -:    1:#include "s21_string.h"
+        -:    2:
+       12:    3:char *s21_strncpy(char *dest, const char *src, s21_size_t n) {
+       12:    4:  char *start = dest;
+       12:    5:  if (dest == S21_NULL || src == S21_NULL) {
+        2:    6:    return S21_NULL;
+        -:    7:  }
+       45:    8:  while (*src != '\0' && n > 0) {
+       35:    9:    *dest = *src;
+       35:   10:    dest++;
+       35:   11:    src++;
+       35:   12:    n--;
+        -:   13:  }
+       40:   14:  while (n > 0) {
+       30:   15:    *dest = '\0';
+       30:   16:    dest++;
+       30:   17:    n--;
+        -:   18:  }
+       10:   19:  return start;
+        -:   20:}

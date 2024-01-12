@@ -1,0 +1,345 @@
+        -:    0:Source:test.c
+        -:    1:#include <check.h>
+        -:    2:#include <string.h>
+        -:    3:
+        -:    4:#include "s21_string.h"
+        -:    5:
+        -:    6:// s21_strlen
+        1:    7:START_TEST(test_s21_strlen) {
+       1*:    8:  ck_assert_int_eq(s21_strlen("hello"), strlen("hello"));
+       1*:    9:  ck_assert_int_eq(s21_strlen(""), strlen(""));
+       1*:   10:  ck_assert_int_eq(s21_strlen("123456789"), strlen("123456789"));
+        1:   11:}
+        -:   12:END_TEST
+        -:   13:
+        -:   14:// s21_strncpy
+        1:   15:START_TEST(test_s21_strncpy_normal) {
+        -:   16:  char dest1[50], dest2[50];
+        1:   17:  s21_strncpy(dest1, "Hello", 6);
+        1:   18:  strncpy(dest2, "Hello", 6);
+       1*:   19:  ck_assert_msg(memcmp(dest1, dest2, 6) == 0,
+        -:   20:                "First 5 characters should be the same");
+        1:   21:}
+        -:   22:END_TEST
+        -:   23:
+        1:   24:START_TEST(test_s21_strncpy_empty) {
+        -:   25:  char dest1[50], dest2[50];
+       1*:   26:  ck_assert_str_eq(s21_strncpy(dest1, "", 5), strncpy(dest2, "", 5));
+        1:   27:}
+        -:   28:END_TEST
+        -:   29:
+        1:   30:START_TEST(test_s21_strncpy_null) {
+        -:   31:  char dest1[50];
+       1*:   32:  ck_assert_msg(s21_strncpy(NULL, "Hello", 5) == NULL,
+        -:   33:                "Should return NULL when dest is NULL");
+       1*:   34:  ck_assert_msg(s21_strncpy(dest1, NULL, 5) == NULL,
+        -:   35:                "Should return NULL when src is NULL");
+        1:   36:}
+        -:   37:END_TEST
+        -:   38:
+        1:   39:START_TEST(test_s21_strncpy_zero_n) {
+        1:   40:  char dest1[50] = "init", dest2[50] = "init";
+        1:   41:  s21_strncpy(dest1, "Hello", 0);
+        1:   42:  strncpy(dest2, "Hello", 0);
+        -:   43:
+       1*:   44:  ck_assert_msg(strcmp(dest1, dest2) == 0, "Strings should be the same");
+        1:   45:}
+        -:   46:END_TEST
+        -:   47:
+        1:   48:START_TEST(test_s21_strncpy_large_n) {
+        -:   49:  char dest1[10], dest2[10];
+        1:   50:  strncpy(dest2, "Hello", 9);
+        1:   51:  s21_strncpy(dest1, "Hello", 9);
+       1*:   52:  ck_assert_str_eq(dest1, dest2);
+        1:   53:}
+        -:   54:END_TEST
+        -:   55:
+        -:   56:// s21_strncat
+        1:   57:START_TEST(test_s21_strncat_normal) {
+        -:   58:  char dest1[20];
+        -:   59:  char dest2[20];
+        1:   60:  size_t count = 5;
+        -:   61:
+        1:   62:  strcpy(dest1, "Hello");
+        1:   63:  strcpy(dest2, "Hello");
+        -:   64:
+        1:   65:  s21_strncat(dest1, "World", count);
+        1:   66:  strncat(dest2, "World", count);
+        -:   67:
+       1*:   68:  ck_assert_msg(strcmp(dest1, dest2) == 0, "Strings should be the same");
+        1:   69:}
+        -:   70:END_TEST
+        -:   71:
+        1:   72:START_TEST(test_s21_strncat_empty_dest) {
+        -:   73:  char dest1[20];
+        -:   74:  char dest2[20];
+        1:   75:  size_t count = 5;
+        -:   76:
+        1:   77:  strcpy(dest1, "");
+        1:   78:  strcpy(dest2, "");
+        -:   79:
+        1:   80:  s21_strncat(dest1, "World", count);
+        1:   81:  strncat(dest2, "World", count);
+        -:   82:
+       1*:   83:  ck_assert_msg(strcmp(dest1, dest2) == 0, "Strings should be the same");
+        1:   84:}
+        -:   85:END_TEST
+        -:   86:
+        1:   87:START_TEST(test_s21_strncat_empty_source) {
+        -:   88:  char dest1[20];
+        -:   89:  char dest2[20];
+        1:   90:  size_t count = 5;
+        -:   91:
+        1:   92:  strcpy(dest1, "Hello");
+        1:   93:  strcpy(dest2, "Hello");
+        -:   94:
+        1:   95:  s21_strncat(dest1, "", count);
+        1:   96:  strncat(dest2, "", count);
+        -:   97:
+       1*:   98:  ck_assert_msg(strcmp(dest1, dest2) == 0, "Strings should be the same");
+        1:   99:}
+        -:  100:END_TEST
+        -:  101:
+        1:  102:START_TEST(test_s21_strncat_dest_longer_than_count) {
+        -:  103:  char dest1[20];
+        -:  104:  char dest2[20];
+        1:  105:  size_t count = 5;
+        -:  106:
+        1:  107:  strcpy(dest1, "Hello");
+        1:  108:  strcpy(dest2, "Hello");
+        -:  109:
+        1:  110:  s21_strncat(dest1, "World", count);
+        1:  111:  strncat(dest2, "World", count);
+        -:  112:
+        -:  113:  // Attempting to concatenate more characters than 'count'
+        1:  114:  s21_strncat(dest1, "ExtraCharacters", count);
+        1:  115:  strncat(dest2, "ExtraCharacters", count);
+        -:  116:
+       1*:  117:  ck_assert_msg(strcmp(dest1, dest2) == 0, "Strings should be the same");
+        1:  118:}
+        -:  119:END_TEST
+        -:  120:
+        1:  121:START_TEST(test_s21_strncat_count_greater_than_source_length) {
+        -:  122:  char dest1[20];
+        -:  123:  char dest2[20];
+        1:  124:  s21_size_t s21_count = 20;
+        1:  125:  size_t count = 20;
+        -:  126:
+        1:  127:  strcpy(dest1, "Hello");
+        1:  128:  strcpy(dest2, "Hello");
+        -:  129:
+        1:  130:  s21_strncat(dest1, "World", s21_count);
+        1:  131:  strncat(dest2, "World", count);
+        -:  132:
+       1*:  133:  ck_assert_msg(strcmp(dest1, dest2) == 0, "Strings should be the same");
+        1:  134:}
+        -:  135:END_TEST
+        -:  136:
+        -:  137:// s21_strstr
+        1:  138:START_TEST(test_strstr_null) {
+       1*:  139:  ck_assert_msg(s21_strstr(NULL, "Hello") == NULL,
+        -:  140:                "Should return NULL when string is NULL");
+       1*:  141:  ck_assert_msg(s21_strstr("Hello", NULL) == NULL,
+        -:  142:                "Should return NULL when substring is NULL");
+        1:  143:}
+        -:  144:END_TEST
+        -:  145:
+        1:  146:START_TEST(test_strstr_empty) {
+       1*:  147:  ck_assert_msg(s21_strstr("", "Hello") == NULL,
+        -:  148:                "Should return NULL when string is empty");
+       1*:  149:  ck_assert_msg(strcmp(s21_strstr("Hello", ""), "Hello") == 0,
+        -:  150:                "Should return original string when substring is empty");
+       1*:  151:  ck_assert_msg(
+        -:  152:      strcmp(s21_strstr("", ""), "") == 0,
+        -:  153:      "Should return empty string when both string and substring are empty");
+        1:  154:}
+        -:  155:END_TEST
+        -:  156:
+        1:  157:START_TEST(test_strstr_not_found) {
+       1*:  158:  ck_assert_msg(s21_strstr("Hello", "World") == NULL,
+        -:  159:                "Should return NULL when substring is not found in string");
+        1:  160:}
+        -:  161:END_TEST
+        -:  162:
+        1:  163:START_TEST(test_strstr_found) {
+       1*:  164:  ck_assert_msg(s21_strstr("Hello World", "World") != NULL,
+        -:  165:                "Should not return NULL when substring is found in string");
+       1*:  166:  ck_assert_str_eq(s21_strstr("Hello World", "World"), "World");
+        1:  167:}
+        -:  168:END_TEST
+        -:  169:
+        1:  170:START_TEST(test_strstr_case_sensitive) {
+       1*:  171:  ck_assert_msg(
+        -:  172:      s21_strstr("Hello World", "world") == NULL,
+        -:  173:      "Should be case sensitive and return NULL when cases do not match");
+        1:  174:}
+        -:  175:END_TEST
+        -:  176:
+        1:  177:START_TEST(test_strstr_match_at_beginning) {
+        1:  178:  char haystack[] = "Hello World";
+        1:  179:  char needle[] = "Hello";
+       1*:  180:  ck_assert_str_eq(s21_strstr(haystack, needle), haystack);
+        1:  181:}
+        -:  182:END_TEST
+        -:  183:
+        1:  184:START_TEST(test_strstr_match_at_end) {
+        1:  185:  char haystack[] = "Hello World";
+        1:  186:  char needle[] = "World";
+       1*:  187:  ck_assert_str_eq(s21_strstr(haystack, needle), haystack + 6);
+        1:  188:}
+        -:  189:END_TEST
+        -:  190:
+        1:  191:START_TEST(test_strstr_match_in_middle) {
+        1:  192:  char haystack[] = "Hello World";
+        1:  193:  char needle[] = "lo Wo";
+       1*:  194:  ck_assert_str_eq(s21_strstr(haystack, needle), haystack + 3);
+        1:  195:}
+        -:  196:END_TEST
+        -:  197:
+        1:  198:START_TEST(test_strstr_multiple_matches) {
+        1:  199:  char haystack[] = "Hello Hello Hello";
+        1:  200:  char needle[] = "Hello";
+       1*:  201:  ck_assert_str_eq(s21_strstr(haystack, needle), haystack);
+        1:  202:}
+        -:  203:END_TEST
+        -:  204:
+        -:  205:
+        -:  206:// s21_strncmp
+        -:  207:
+        1:  208:START_TEST(test_strncmp_empty) {
+        1:  209:  char str_1[1] = "";
+        1:  210:  char str_2[1] = "";
+       1*:  211:  ck_assert_int_eq(strncmp(str_1, str_2, 1), s21_strncmp(str_1, str_2, 1));
+        1:  212:}
+        -:  213:END_TEST
+        -:  214:
+        1:  215:START_TEST(test_strncmp_0) {
+        1:  216:  char str_1[13] = "Hello world\0";
+        1:  217:  char str_2[12] = "Hello world ";
+       1*:  218:  ck_assert_int_eq(strncmp(str_1, str_2, 13), s21_strncmp(str_1, str_2, 13));
+        1:  219:}
+        -:  220:END_TEST
+        -:  221:
+        1:  222:START_TEST(test_strncmp_first_long) {
+        1:  223:  char str_1[21] = "Hello world123467890";
+        1:  224:  char str_2[12] = "Hello world";
+       1*:  225:  ck_assert_int_eq(strncmp(str_1, str_2, 12), s21_strncmp(str_1, str_2, 12));
+        1:  226:}
+        -:  227:END_TEST
+        1:  228:START_TEST(test_strncmp_second_long) {
+        1:  229:  char str_1[12] = "Hello world";
+        1:  230:  char str_2[21] = "Hello world123467890";
+       1*:  231:  ck_assert_int_eq(strncmp(str_1, str_2, 12), s21_strncmp(str_1, str_2, 12));
+        1:  232:}
+        -:  233:END_TEST
+        -:  234:
+        -:  235:// s21_strcspn
+        -:  236:
+        1:  237:START_TEST(test_strcspn_no_match) {
+        1:  238:  char str1[7] = "abcdef";
+        1:  239:  char str2[2] = "x";
+       1*:  240:  ck_assert_int_eq(strcspn(str1, str2), s21_strcspn(str1, str2));
+        1:  241:}
+        -:  242:END_TEST
+        1:  243:START_TEST(test_strcspn_match_end) {
+        1:  244:  char str1[7] = "abcdef";
+        1:  245:  char str2[2] = "f";
+       1*:  246:  ck_assert_int_eq(strcspn(str1, str2), s21_strcspn(str1, str2));
+        1:  247:}
+        -:  248:END_TEST
+        1:  249:START_TEST(test_strcspn_match_start) {
+        1:  250:  char str1[7] = "abcdef";
+        1:  251:  char str2[2] = "a";
+       1*:  252:  ck_assert_int_eq(strcspn(str1, str2), s21_strcspn(str1, str2));
+        1:  253:}
+        -:  254:END_TEST
+        1:  255:START_TEST(test_strcspn_empty_str1) {
+        1:  256:  char str1[1] = "";
+        1:  257:  char str2[2] = "x";
+       1*:  258:  ck_assert_int_eq(strcspn(str1, str2), s21_strcspn(str1, str2));
+        1:  259:}
+        -:  260:END_TEST
+        1:  261:START_TEST(test_strcspn_empty_str2) {
+        1:  262:  char str1[7] = "abcdef";
+        1:  263:  char str2[1] = "";
+       1*:  264:  ck_assert_int_eq(strcspn(str1, str2), s21_strcspn(str1, str2));
+        1:  265:}
+        -:  266:
+       30:  267:Suite *str_suite(void) {
+        -:  268:  Suite *s;
+        -:  269:  TCase *tc_strlen, *tc_strncpy, *tc_strncat, *tc_strstr, *tc_strncmp, *tc_strcspn;
+        -:  270:
+       30:  271:  s = suite_create("String");
+        -:  272:
+        -:  273:  // strlen
+       30:  274:  tc_strlen = tcase_create("s21_strlen");
+       30:  275:  tcase_add_test(tc_strlen, test_s21_strlen);
+       30:  276:  suite_add_tcase(s, tc_strlen);
+        -:  277:
+        -:  278:  // strncpy
+       30:  279:  tc_strncpy = tcase_create("s21_strncpy");
+       30:  280:  tcase_add_test(tc_strncpy, test_s21_strncpy_normal);
+       30:  281:  tcase_add_test(tc_strncpy, test_s21_strncpy_empty);
+       30:  282:  tcase_add_test(tc_strncpy, test_s21_strncpy_null);
+       30:  283:  tcase_add_test(tc_strncpy, test_s21_strncpy_zero_n);
+       30:  284:  tcase_add_test(tc_strncpy, test_s21_strncpy_large_n);
+        -:  285:
+       30:  286:  suite_add_tcase(s, tc_strncpy);
+        -:  287:
+        -:  288:  // strncat
+       30:  289:  tc_strncat = tcase_create("s21_strncat");
+       30:  290:  tcase_add_test(tc_strncat, test_s21_strncat_normal);
+       30:  291:  tcase_add_test(tc_strncat, test_s21_strncat_empty_dest);
+       30:  292:  tcase_add_test(tc_strncat, test_s21_strncat_empty_source);
+       30:  293:  tcase_add_test(tc_strncat, test_s21_strncat_dest_longer_than_count);
+       30:  294:  tcase_add_test(tc_strncat, test_s21_strncat_count_greater_than_source_length);
+        -:  295:
+       30:  296:  suite_add_tcase(s, tc_strncat);
+        -:  297:
+        -:  298:  // strstr
+       30:  299:  tc_strstr = tcase_create("s21_strstr");
+       30:  300:  tcase_add_test(tc_strstr, test_strstr_null);
+       30:  301:  tcase_add_test(tc_strstr, test_strstr_empty);
+       30:  302:  tcase_add_test(tc_strstr, test_strstr_not_found);
+       30:  303:  tcase_add_test(tc_strstr, test_strstr_found);
+       30:  304:  tcase_add_test(tc_strstr, test_strstr_case_sensitive);
+       30:  305:  tcase_add_test(tc_strstr, test_strstr_match_at_beginning);
+       30:  306:  tcase_add_test(tc_strstr, test_strstr_match_at_end);
+       30:  307:  tcase_add_test(tc_strstr, test_strstr_match_in_middle);
+       30:  308:  tcase_add_test(tc_strstr, test_strstr_multiple_matches);
+       30:  309:  suite_add_tcase(s, tc_strstr);
+        -:  310:
+        -:  311:  // strncmp
+       30:  312:  tc_strncmp = tcase_create("s21_strncmp");
+       30:  313:  tcase_add_test(tc_strncmp, test_strncmp_empty);
+       30:  314:  tcase_add_test(tc_strncmp, test_strncmp_0);
+       30:  315:  tcase_add_test(tc_strncmp, test_strncmp_first_long);
+       30:  316:  tcase_add_test(tc_strncmp, test_strncmp_second_long);
+       30:  317:  suite_add_tcase(s, tc_strncmp);
+        -:  318:
+        -:  319:  // strcspn
+       30:  320:  tc_strcspn = tcase_create("s21_strcspn");
+       30:  321:  tcase_add_test(tc_strcspn, test_strcspn_no_match);
+       30:  322:  tcase_add_test(tc_strcspn, test_strcspn_match_end);
+       30:  323:  tcase_add_test(tc_strcspn, test_strcspn_match_start);
+       30:  324:  tcase_add_test(tc_strcspn, test_strcspn_empty_str1);
+       30:  325:  tcase_add_test(tc_strcspn, test_strcspn_empty_str2);
+       30:  326:  suite_add_tcase(s, tc_strcspn);
+        -:  327:
+       30:  328:  return s;
+        -:  329:}
+        -:  330:
+       30:  331:int main(void) {
+        -:  332:  int number_failed;
+        -:  333:  Suite *s;
+        -:  334:  SRunner *sr;
+        -:  335:
+       30:  336:  s = str_suite();
+       30:  337:  sr = srunner_create(s);
+        -:  338:
+       30:  339:  srunner_run_all(sr, CK_NORMAL);
+        1:  340:  number_failed = srunner_ntests_failed(sr);
+        1:  341:  srunner_free(sr);
+        -:  342:
+        1:  343:  return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+        -:  344:}

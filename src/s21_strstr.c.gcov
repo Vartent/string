@@ -1,0 +1,30 @@
+        -:    0:Source:s21_strstr.c
+        -:    1:#include "s21_string.h"
+        -:    2:
+       13:    3:char *s21_strstr(char *haystack, char *needle)
+        -:    4:{
+        -:    5:    char *a, *b;
+       13:    6:  if (haystack == S21_NULL || needle == S21_NULL) {
+        2:    7:    return S21_NULL;
+        -:    8:  }
+       11:    9:    b = needle;
+       11:   10:    if (*b == 0) {
+        2:   11:      return haystack;
+        -:   12:    }
+       46:   13:    for ( ; *haystack != 0; haystack += 1) {
+       43:   14:  if (*haystack != *b) {
+       36:   15:      continue;
+        -:   16:  }
+        7:   17:  a = haystack;
+        -:   18:  while (1) {
+       38:   19:      if (*b == 0) {
+        6:   20:        return haystack;
+        -:   21:      }
+       32:   22:      if (*a++ != *b++) {
+        1:   23:            break;
+        -:   24:      }
+        -:   25:  }
+        1:   26:  b = needle;
+        -:   27:    }
+        3:   28:    return S21_NULL;
+        -:   29:}
