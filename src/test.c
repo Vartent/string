@@ -203,9 +203,40 @@ START_TEST(test_strncmp_second_long) {
 }
 END_TEST
 
+// s21_strpbrk
+
+START_TEST(test_strpbrk_empty) {
+  char str_1[1] = "";
+  char str_2[1] = "";
+  ck_assert_ptr_eq(s21_strpbrk(str_1, str_2), strpbrk(str_1, str_2));
+}
+END_TEST
+
+
+START_TEST(test_strpbrk_first_match) {
+  char str_1[13] = "Hello world";
+  char str_2[2] = "H";
+  ck_assert_ptr_eq(s21_strpbrk(str_1, str_2), strpbrk(str_1, str_2));
+}
+END_TEST
+
+START_TEST(test_strpbrk_no_match) {
+  char str_1[13] = "Hello world";
+  char str_2[5] = "1234";
+  ck_assert_ptr_eq(s21_strpbrk(str_1, str_2), strpbrk(str_1, str_2));
+}
+END_TEST
+
+START_TEST(test_strpbrk_multiple_matches) {
+  char str_1[13] = "Hello world";
+  char str_2[5] = "o w";
+  ck_assert_ptr_eq(s21_strpbrk(str_1, str_2), strpbrk(str_1, str_2));
+}
+
+
 Suite *str_suite(void) {
   Suite *s;
-  TCase *tc_strlen, *tc_strncpy, *tc_strncat, *tc_strstr, *tc_strncmp;
+  TCase *tc_strlen, *tc_strncpy, *tc_strncat, *tc_strstr, *tc_strncmp, *tc_strbrk;
 
   s = suite_create("String");
 
@@ -251,6 +282,14 @@ Suite *str_suite(void) {
   tcase_add_test(tc_strncmp, test_strncmp_first_long);
   tcase_add_test(tc_strncmp, test_strncmp_second_long);
   suite_add_tcase(s, tc_strncmp);
+
+  //strbrk
+  tc_strbrk = tcase_create("s21_strbrk");
+  tcase_add_test(tc_strncpy, test_strpbrk_empty);
+  tcase_add_test(tc_strncpy, test_strpbrk_first_match);
+  tcase_add_test(tc_strncpy, test_strpbrk_no_match);
+  tcase_add_test(tc_strncpy, test_strpbrk_multiple_matches);
+  suite_add_tcase(s, tc_strbrk);
 
   return s;
 }
