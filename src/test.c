@@ -1,5 +1,6 @@
 #include <check.h>
 #include <string.h>
+
 #include "s21_string.h"
 
 // s21_strlen
@@ -133,7 +134,7 @@ START_TEST(test_s21_strncat_count_greater_than_source_length) {
 }
 END_TEST
 
-//s21_strstr
+// s21_strstr
 START_TEST(test_strstr_null) {
   ck_assert_msg(s21_strstr(NULL, "Hello") == NULL,
                 "Should return NULL when string is NULL");
@@ -147,8 +148,9 @@ START_TEST(test_strstr_empty) {
                 "Should return NULL when string is empty");
   ck_assert_msg(strcmp(s21_strstr("Hello", ""), "Hello") == 0,
                 "Should return original string when substring is empty");
-  ck_assert_msg(strcmp(s21_strstr("", ""), "") == 0,
-                "Should return empty string when both string and substring are empty");
+  ck_assert_msg(
+      strcmp(s21_strstr("", ""), "") == 0,
+      "Should return empty string when both string and substring are empty");
 }
 END_TEST
 
@@ -166,14 +168,44 @@ START_TEST(test_strstr_found) {
 END_TEST
 
 START_TEST(test_strstr_case_sensitive) {
-  ck_assert_msg(s21_strstr("Hello World", "world") == NULL,
-                "Should be case sensitive and return NULL when cases do not match");
+  ck_assert_msg(
+      s21_strstr("Hello World", "world") == NULL,
+      "Should be case sensitive and return NULL when cases do not match");
+}
+END_TEST
+
+// s21_strncmp
+
+START_TEST(test_strncmp_empty) {
+  char str_1[1] = "";
+  char str_2[1] = "";
+  ck_assert_int_eq(strncmp(str_1, str_2, 1), s21_strncmp(str_1, str_2, 1));
+}
+END_TEST
+
+// START_TEST(test_strncmp_0) {
+//   char str_1[13] = "Hello world\0";
+//   char str_2[12] = "Hello world";
+//   ck_assert_int_eq(strncmp(str_1, str_2, 13), s21_strncmp(str_1, str_2, 13));
+// }
+// END_TEST
+
+START_TEST(test_strncmp_first_long) {
+  char str_1[21] = "Hello world123467890";
+  char str_2[12] = "Hello world";
+  ck_assert_int_eq(strncmp(str_1, str_2, 12), s21_strncmp(str_1, str_2, 12));
+}
+END_TEST
+START_TEST(test_strncmp_second_long) {
+  char str_1[12] = "Hello world";
+  char str_2[21] = "Hello world123467890";
+  ck_assert_int_eq(strncmp(str_1, str_2, 12), s21_strncmp(str_1, str_2, 12));
 }
 END_TEST
 
 Suite *str_suite(void) {
   Suite *s;
-  TCase *tc_strlen, *tc_strncpy, *tc_strncat, *tc_strstr;
+  TCase *tc_strlen, *tc_strncpy, *tc_strncat, *tc_strstr, *tc_strncmp;
 
   s = suite_create("String");
 
@@ -201,7 +233,7 @@ Suite *str_suite(void) {
   tcase_add_test(tc_strncat, test_s21_strncat_count_greater_than_source_length);
 
   suite_add_tcase(s, tc_strncat);
-  
+
   // strstr
   tc_strstr = tcase_create("s21_strstr");
   tcase_add_test(tc_strstr, test_strstr_null);
@@ -211,6 +243,14 @@ Suite *str_suite(void) {
   tcase_add_test(tc_strstr, test_strstr_case_sensitive);
 
   suite_add_tcase(s, tc_strstr);
+
+  // strncmp
+  tc_strncmp = tcase_create("s21_strncmp");
+  tcase_add_test(tc_strncmp, test_strncmp_empty);
+  // tcase_add_test(tc_strncmp, test_strncmp_0);
+  tcase_add_test(tc_strncmp, test_strncmp_first_long);
+  tcase_add_test(tc_strncmp, test_strncmp_second_long);
+  suite_add_tcase(s, tc_strncmp);
 
   return s;
 }
