@@ -429,10 +429,47 @@ START_TEST(test_memcpy_large_string) {
 }
 END_TEST
 
+// memset
+
+START_TEST(test_memset_basic) {
+  char str[] = "Hello World";
+  s21_memset(str, '*', 5);
+  ck_assert_str_eq(str, "***** World");
+}
+END_TEST
+
+START_TEST(test_memset_zero_len) {
+  char str[] = "Hello World";
+  s21_memset(str, '*', 0);
+  ck_assert_str_eq(str, "Hello World");
+}
+END_TEST
+
+START_TEST(test_memset_full_len) {
+  char str[] = "Hello World";
+  s21_memset(str, '*', strlen(str));
+  ck_assert_str_eq(str, "***********");
+}
+END_TEST
+
+START_TEST(test_memset_partial_len) {
+  char str[] = "Hello World";
+  s21_memset(str + 3, '*', 5);
+  ck_assert_str_eq(str, "Hel*****rld");
+}
+END_TEST
+
+START_TEST(test_memset_zero_value) {
+  char str[] = "Hello World";
+  s21_memset(str, 0, strlen(str));
+  ck_assert_str_eq(str, "");
+}
+END_TEST
+
 Suite *str_suite(void) {
   Suite *s;
   TCase *tc_strlen, *tc_strncpy, *tc_strncat, *tc_strstr, *tc_strncmp,
-      *tc_strcspn, *tc_strbrk, *tc_memchr, *tc_memcpy, *tc_memcmp;
+      *tc_strcspn, *tc_strbrk, *tc_memchr, *tc_memcpy, *tc_memcmp, *tc_memset;
 
   s = suite_create("String");
 
@@ -526,6 +563,15 @@ Suite *str_suite(void) {
   tcase_add_test(tc_memcpy, test_memcpy_partial_string);
   tcase_add_test(tc_memcpy, test_memcpy_large_string);
   suite_add_tcase(s, tc_memcpy);
+
+  // memset
+  tc_memset = tcase_create("s21_memset");
+  tcase_add_test(tc_memset, test_memset_basic);
+  tcase_add_test(tc_memset, test_memset_zero_len);
+  tcase_add_test(tc_memset, test_memset_full_len);
+  tcase_add_test(tc_memset, test_memset_partial_len);
+  tcase_add_test(tc_memset, test_memset_zero_value);
+  suite_add_tcase(s, tc_memset);
 
   return s;
 }
