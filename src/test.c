@@ -202,7 +202,6 @@ START_TEST(test_strstr_multiple_matches) {
 }
 END_TEST
 
-
 // s21_strncmp
 
 START_TEST(test_strncmp_empty) {
@@ -240,7 +239,6 @@ START_TEST(test_strpbrk_empty) {
   ck_assert_ptr_eq(s21_strpbrk(str_1, str_2), strpbrk(str_1, str_2));
 }
 END_TEST
-
 
 START_TEST(test_strpbrk_first_match) {
   char str_1[13] = "Hello world";
@@ -294,9 +292,147 @@ START_TEST(test_strcspn_empty_str2) {
   ck_assert_int_eq(strcspn(str1, str2), s21_strcspn(str1, str2));
 }
 
+// memchr
+
+START_TEST(test_memchr_not_found) {
+  char data[] = "Hello World";
+  ck_assert_msg(s21_memchr(data, 'a', 11) == NULL,
+                "Should return NULL when byte is not found in data");
+}
+END_TEST
+
+START_TEST(test_memchr_found) {
+  char data[] = "Hello World";
+  ck_assert_msg(s21_memchr(data, 'W', 11) != NULL,
+                "Should not return NULL when byte is found in data");
+  ck_assert_ptr_eq(s21_memchr(data, 'W', 11), data + 6);
+}
+END_TEST
+
+START_TEST(test_memchr_match_at_beginning) {
+  char data[] = "Hello World";
+  ck_assert_ptr_eq(s21_memchr(data, 'H', 11), data);
+}
+END_TEST
+
+START_TEST(test_memchr_match_at_end) {
+  char data[] = "Hello World";
+  ck_assert_ptr_eq(s21_memchr(data, 'd', 11), data + 10);
+}
+END_TEST
+
+START_TEST(test_memchr_match_in_middle) {
+  char data[] = "Hello World";
+  ck_assert_ptr_eq(s21_memchr(data, 'l', 11), data + 2);
+}
+END_TEST
+
+START_TEST(test_memchr_match_with_length) {
+  char data[] = "Hello World";
+  ck_assert_ptr_eq(s21_memchr(data, 'l', 3), data + 2);
+}
+END_TEST
+
+START_TEST(test_memchr_match_with_zero_length) {
+  char data[] = "Hello World";
+  ck_assert_msg(s21_memchr(data, 'l', 0) == NULL,
+                "Should return NULL when length is 0");
+}
+END_TEST
+
+// memcmp
+
+START_TEST(test_memcmp_same_ptr) {
+  char str[] = "Hello";
+  int n = 5;
+  int result = s21_memcmp(str, str, n);
+  ck_assert_int_eq(result, 0);
+}
+END_TEST
+
+START_TEST(test_memcmp_equal_strings) {
+  char str1[] = "Hello";
+  char str2[] = "Hello";
+  int n = 5;
+  ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+}
+END_TEST
+
+START_TEST(test_memcmp_different_strings) {
+  char str1[] = "Hello";
+  char str2[] = "World";
+  int n = 5;
+  ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+}
+END_TEST
+
+START_TEST(test_memcmp_partial_match) {
+  char str1[] = "Hello World";
+  char str2[] = "Hello There";
+  int n = 5;
+  ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+}
+END_TEST
+
+START_TEST(test_memcmp_first_string_long) {
+  char str1[] = "Hello World";
+  char str2[] = "Hello";
+  int n = 7;
+  ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+}
+END_TEST
+
+// memcpy
+
+START_TEST(test_memcpy_empty) {
+  char dest[10] = {0};
+  char src[] = "";
+  int n = 0;
+  s21_memcpy(dest, src, n);
+  char dest_expected[10] = {0};
+  memcpy(dest_expected, src, n);
+  ck_assert_mem_eq(dest, dest_expected, sizeof(dest));
+}
+END_TEST
+
+START_TEST(test_memcpy_full_string) {
+  char dest[10] = {0};
+  char src[] = "Hello";
+  int n = 5;
+  s21_memcpy(dest, src, n);
+  char dest_expected[10] = {0};
+  memcpy(dest_expected, src, n);
+  ck_assert_mem_eq(dest, dest_expected, sizeof(dest));
+}
+END_TEST
+
+START_TEST(test_memcpy_partial_string) {
+  char dest[10] = {0};
+  char src[] = "Hello World";
+  int n = 5;
+  s21_memcpy(dest, src, n);
+  char dest_expected[10] = {0};
+  memcpy(dest_expected, src, n);
+  ck_assert_mem_eq(dest, dest_expected, sizeof(dest));
+}
+
+START_TEST(test_memcpy_large_string) {
+  char dest[100] = {0};
+  char src[] =
+      "This is a very long string that exceeds the size of the destination "
+      "buffer..........................";
+  int n = strlen(src);
+  s21_memcpy(dest, src, n);
+  char dest_expected[100] = {0};
+  memcpy(dest_expected, src, n);
+  ck_assert_mem_eq(dest, dest_expected, sizeof(dest));
+}
+END_TEST
+
 Suite *str_suite(void) {
   Suite *s;
-  TCase *tc_strlen, *tc_strncpy, *tc_strncat, *tc_strstr, *tc_strncmp, *tc_strcspn, *tc_strbrk;
+  TCase *tc_strlen, *tc_strncpy, *tc_strncat, *tc_strstr, *tc_strncmp,
+      *tc_strcspn, *tc_strbrk, *tc_memchr, *tc_memcpy, *tc_memcmp;
 
   s = suite_create("String");
 
@@ -346,13 +482,14 @@ Suite *str_suite(void) {
   tcase_add_test(tc_strncmp, test_strncmp_second_long);
   suite_add_tcase(s, tc_strncmp);
 
-  //strbrk
+  // strbrk
   tc_strbrk = tcase_create("s21_strbrk");
   tcase_add_test(tc_strncpy, test_strpbrk_empty);
   tcase_add_test(tc_strncpy, test_strpbrk_first_match);
   tcase_add_test(tc_strncpy, test_strpbrk_no_match);
   tcase_add_test(tc_strncpy, test_strpbrk_multiple_matches);
   suite_add_tcase(s, tc_strbrk);
+
   // strcspn
   tc_strcspn = tcase_create("s21_strcspn");
   tcase_add_test(tc_strcspn, test_strcspn_no_match);
@@ -361,6 +498,34 @@ Suite *str_suite(void) {
   tcase_add_test(tc_strcspn, test_strcspn_empty_str1);
   tcase_add_test(tc_strcspn, test_strcspn_empty_str2);
   suite_add_tcase(s, tc_strcspn);
+
+  // memchr
+  tc_memchr = tcase_create("s21_memchr");
+  tcase_add_test(tc_memchr, test_memchr_not_found);
+  tcase_add_test(tc_memchr, test_memchr_found);
+  tcase_add_test(tc_memchr, test_memchr_match_at_beginning);
+  tcase_add_test(tc_memchr, test_memchr_match_at_end);
+  tcase_add_test(tc_memchr, test_memchr_match_in_middle);
+  tcase_add_test(tc_memchr, test_memchr_match_with_length);
+  tcase_add_test(tc_memchr, test_memchr_match_with_zero_length);
+  suite_add_tcase(s, tc_memchr);
+
+  // memcmp
+  tc_memcmp = tcase_create("s21_memcmp");
+  tcase_add_test(tc_memchr, test_memcmp_same_ptr);
+  tcase_add_test(tc_memchr, test_memcmp_equal_strings);
+  tcase_add_test(tc_memchr, test_memcmp_different_strings);
+  tcase_add_test(tc_memchr, test_memcmp_partial_match);
+  tcase_add_test(tc_memchr, test_memcmp_first_string_long);
+  suite_add_tcase(s, tc_memcmp);
+
+  // memcpy
+  tc_memcpy = tcase_create("s21_memcpy");
+  tcase_add_test(tc_memcpy, test_memcpy_empty);
+  tcase_add_test(tc_memcpy, test_memcpy_full_string);
+  tcase_add_test(tc_memcpy, test_memcpy_partial_string);
+  tcase_add_test(tc_memcpy, test_memcpy_large_string);
+  suite_add_tcase(s, tc_memcpy);
 
   return s;
 }
