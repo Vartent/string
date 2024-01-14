@@ -1,8 +1,8 @@
 CC=gcc
 CFLAGS=-Wall -Werror -Wextra
 DEPS=s21_string.a
-OBJ= s21_strlen.o s21_strncpy.o s21_strncat.o s21_strstr.o s21_strncmp.o s21_strpbrk.o
-LIBS=-lcheck -lm -lpthread 
+OBJ= s21_strlen.o s21_strncpy.o s21_strncat.o s21_strstr.o s21_strncmp.o s21_strpbrk.o s21_strchr.o s21_strrchr.o
+LIBS=-lcheck -lm -lpthread
 GCOV=gcov
 LCOV=lcov
 GENHTML=genhtml

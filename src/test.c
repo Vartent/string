@@ -292,6 +292,60 @@ START_TEST(test_strcspn_empty_str2) {
   ck_assert_int_eq(strcspn(str1, str2), s21_strcspn(str1, str2));
 }
 
+// s21_strchr
+
+START_TEST(test_s21_strchr_normal) {
+  const char *str = "Hello, World!";
+  char target = 'o';
+  char *result_s21 = s21_strchr(str, target);
+  char *result_orig = strchr(str, target);
+  ck_assert_ptr_eq(result_s21, result_orig);
+}
+END_TEST
+START_TEST(test_s21_strchr_char_not_present) {
+  const char *str = "Hello, World!";
+  char target = 'z';
+  char *result_s21 = s21_strchr(str, target);
+  char *result_orig = strchr(str, target);
+  ck_assert_ptr_eq(result_s21, result_orig);
+}
+END_TEST
+START_TEST(test_s21_strchr_char_null_terminator) {
+  const char *str = "Hello, World!";
+  char target = '\0';
+  char *result_s21 = s21_strchr(str, target);
+  char *result_orig = strchr(str, target);
+  ck_assert_ptr_eq(result_s21, result_orig);
+}
+END_TEST
+
+// s21_strrchr
+
+START_TEST(test_s21_strrchr_normal) {
+  const char *str = "Hello, World!";
+  int target = 'o';
+  char *result_s21 = s21_strrchr(str, target);
+  char *result_orig = strrchr(str, target);
+  ck_assert_ptr_eq(result_s21, result_orig);
+}
+END_TEST
+START_TEST(test_s21_strrchr_char_not_present) {
+  const char *str = "Hello, World!";
+  int target = 'z';
+  char *result_s21 = s21_strrchr(str, target);
+  char *result_orig = strrchr(str, target);
+  ck_assert_ptr_eq(result_s21, result_orig);
+}
+END_TEST
+START_TEST(test_s21_strrchr_char_null_terminator) {
+  const char *str = "Hello, World!";
+  int target = '\0';
+  char *result_s21 = s21_strrchr(str, target);
+  char *result_orig = strrchr(str, target);
+  ck_assert_ptr_eq(result_s21, result_orig);
+}
+END_TEST
+
 // memchr
 
 START_TEST(test_memchr_not_found) {
@@ -469,7 +523,7 @@ END_TEST
 Suite *str_suite(void) {
   Suite *s;
   TCase *tc_strlen, *tc_strncpy, *tc_strncat, *tc_strstr, *tc_strncmp,
-      *tc_strcspn, *tc_strbrk, *tc_memchr, *tc_memcpy, *tc_memcmp, *tc_memset;
+      *tc_strcspn, *tc_strbrk, *tc_strchr, *tc_strrchr, *tc_memchr, *tc_memcpy, *tc_memcmp, *tc_memset;
 
   s = suite_create("String");
 
@@ -535,6 +589,20 @@ Suite *str_suite(void) {
   tcase_add_test(tc_strcspn, test_strcspn_empty_str1);
   tcase_add_test(tc_strcspn, test_strcspn_empty_str2);
   suite_add_tcase(s, tc_strcspn);
+
+  // strchr
+  tc_strchr = tcase_create("s21_strchr");
+  tcase_add_test(tc_strchr, test_s21_strchr_normal);
+  tcase_add_test(tc_strchr, test_s21_strchr_char_not_present);
+  tcase_add_test(tc_strchr, test_s21_strchr_char_null_terminator);
+  suite_add_tcase(s, tc_strchr);
+
+  // strchr
+  tc_strrchr = tcase_create("s21_strrchr");
+  tcase_add_test(tc_strrchr, test_s21_strrchr_normal);
+  tcase_add_test(tc_strrchr, test_s21_strrchr_char_not_present);
+  tcase_add_test(tc_strrchr, test_s21_strrchr_char_null_terminator);
+  suite_add_tcase(s, tc_strrchr);
 
   // memchr
   tc_memchr = tcase_create("s21_memchr");
