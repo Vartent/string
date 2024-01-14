@@ -72,7 +72,7 @@ char* print_number(char* str, flag_t* flags, char type, va_list* input) {
   char buffer[256];
 
   if (type == 'f') {
-    my_ftos(buffer, va_arg(*input, double), flags);
+    my_ftostr(buffer, va_arg(*input, double), flags);
   } else if (type == 'u') {
     unsigned long input_data;
     if (flags->is_long == 1)
@@ -81,7 +81,7 @@ char* print_number(char* str, flag_t* flags, char type, va_list* input) {
       input_data = (unsigned short)va_arg(*input, int);
     else
       input_data = (unsigned int)va_arg(*input, unsigned int);
-    my_uitos(buffer, input_data, flags);
+    my_uitostr(buffer, input_data, flags);
   } else {
     long long int input_data;
     if (flags->is_long == 1)
@@ -90,7 +90,7 @@ char* print_number(char* str, flag_t* flags, char type, va_list* input) {
       input_data = (short)va_arg(*input, int);
     else
       input_data = (int)va_arg(*input, int);
-    my_itos(buffer, input_data, flags);
+    my_itostr(buffer, input_data, flags);
   }
 
   for (int i = 0; buffer[i] != '\0'; i++) {
@@ -110,7 +110,7 @@ unsigned long long my_pow(int base, int exp) {
   return result;
 }
 
-void my_itos(char* str, long long int num, flag_t* flags) {
+void my_itostr(char* str, long long int num, flag_t* flags) {
   if (flags->precision == -1) {
     flags->precision = 1;
   }
@@ -191,7 +191,7 @@ void my_itos(char* str, long long int num, flag_t* flags) {
   *str = '\0';
 }
 
-void my_uitos(char* str, unsigned long num, flag_t* flags) {
+void my_uitostr(char* str, unsigned long num, flag_t* flags) {
   if (flags->precision == -1) {
     flags->precision = 1;
   }
@@ -248,7 +248,7 @@ void my_uitos(char* str, unsigned long num, flag_t* flags) {
   *str = '\0';
 }
 
-void my_ftos(char* str, double num, flag_t* flags) {
+void my_ftostr(char* str, double num, flag_t* flags) {
   if (flags->precision == -1) {
     flags->precision = 6;
   }
