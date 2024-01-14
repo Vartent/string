@@ -26,6 +26,7 @@ gcov_report: $(DEPS)
 	$(GCOV) *.c
 	$(LCOV) -t "test" -o result.info -c -d .
 	$(GENHTML) -o ./report result.info
+	open ./report/index.html
 
 lcov:
 	brew install lcov
