@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 #ifndef _S21_SIZE_T
 #define s21_size_t unsigned long long
@@ -27,7 +28,7 @@ s21_size_t s21_strlen(const char *str);
 char *s21_strpbrk(const char *str1, const char *str2);
 char *s21_strstr(char *haystack, char *needle);
 char *s21_strtok(char *str, const char *delim);
+int s21_sprintf(char *str, const char *format, ...);
 // int s21_sscanf(const char *str, const char *format, ...);
-// int s21_sprintf(char *str, const char *format, ...);
 
 #endif
