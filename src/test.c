@@ -14861,11 +14861,26 @@ START_TEST(test_strtok_basic) {
 }
 END_TEST
 
+
+//strerror
+
+START_TEST(test_s21_strerror) {
+  int validErrorCode = 20;
+  char* validErrorMessage = s21_strerror(validErrorCode);
+  char* validErrorMessageOriginal = strerror(validErrorCode);
+  ck_assert_str_eq(validErrorMessage, validErrorMessageOriginal);
+  int unknownErrorCode = -1;
+  char* unknownErrorMessage = s21_strerror(unknownErrorCode);
+  char* unknownErrorMessageOriginal = strerror(unknownErrorCode);
+  ck_assert_str_eq(unknownErrorMessage, unknownErrorMessageOriginal);
+}
+END_TEST
+
 Suite *str_suite(void) {
   Suite *s;
   TCase *tc_strlen, *tc_strncpy, *tc_strncat, *tc_strstr, *tc_strncmp,
       *tc_strcspn, *tc_strbrk, *tc_strchr, *tc_strrchr, *tc_memchr, *tc_memcpy,
-      *tc_memcmp, *tc_memset, *tc_strtok, *tc_sprintf;
+      *tc_memcmp, *tc_memset, *tc_strtok, *tc_sprintf, *tc_strerror;
 
   s = suite_create("String");
 
@@ -16381,6 +16396,12 @@ Suite *str_suite(void) {
   tcase_add_test(tc_strtok, test_strtok_null_string);
   tcase_add_test(tc_strtok, test_strtok_basic);
   suite_add_tcase(s, tc_strtok);
+
+	// strerror
+
+  tc_strerror = tcase_create("s21_strerror");
+  tcase_add_test(tc_strerror, test_s21_strerror);
+  suite_add_tcase(s, tc_strerror);
 
   return s;
 }
