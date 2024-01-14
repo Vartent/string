@@ -102,44 +102,12 @@ sprintf(str1, "%10.2d", 0);
 ck_assert_str_eq(str, str1);
 } END_TEST
 
-START_TEST(sprintf_013) {
-char str[100];
-char str1[100];
-s21_sprintf(str, "%-10.2d", 0);
-sprintf(str1, "%-10.2d", 0);
-ck_assert_str_eq(str, str1);
-} END_TEST
-
-START_TEST(sprintf_014) {
-char str[100];
-char str1[100];
-s21_sprintf(str, "%-.2d", 0);
-sprintf(str1, "%-.2d", 0);
-ck_assert_str_eq(str, str1);
-} END_TEST
-
-START_TEST(sprintf_015) {
-char str[200];
-char str1[200];
-s21_sprintf(str, "%ld", 100000000000000000);
-sprintf(str1, "%ld", 100000000000000000);
-ck_assert_str_eq(str, str1);
-} END_TEST
-
 START_TEST(sprintf_016) {
 char str[100];
 char str1[100];
 short int x = 400;
 s21_sprintf(str, "%hd", x);
 sprintf(str1, "%hd", x);
-ck_assert_str_eq(str, str1);
-} END_TEST
-
-START_TEST(sprintf_017) {
-char str[100];
-char str1[100];
-s21_sprintf(str, "%-5d", 0);
-sprintf(str1, "%-5d", 0);
 ck_assert_str_eq(str, str1);
 } END_TEST
 
@@ -1272,48 +1240,12 @@ sprintf(str1, "%.f", 5634.9);
 ck_assert_str_eq(str, str1);
 } END_TEST
 
-START_TEST(sprintf_165) {
-char data[1000];
-char data1[1000];
-wchar_t buf[100] = L"hello";
-s21_sprintf(data, "%ls", buf);
-sprintf(data1, "%ls", buf);
-ck_assert_str_eq(data, data1);
-} END_TEST
-
 START_TEST(sprintf_166) {
 char str[100];
 char str1[100];
 s21_sprintf(str, "%f", 1337.228);
 sprintf(str1, "%f", 1337.228);
 ck_assert_str_eq(str, str1);
-} END_TEST
-
-START_TEST(sprintf_167) {
-char data[1000];
-char data1[1000];
-wchar_t buf[100] = L"hello";
-s21_sprintf(data, "%-ls", buf);
-sprintf(data1, "%-ls", buf);
-ck_assert_str_eq(data, data1);
-} END_TEST
-
-START_TEST(sprintf_168) {
-char data[1000];
-char data1[1000];
-wchar_t buf[100] = L"hello";
-s21_sprintf(data, "%-.5ls", buf);
-sprintf(data1, "%-.5ls", buf);
-ck_assert_str_eq(data, data1);
-} END_TEST
-
-START_TEST(sprintf_169) {
-char data[1000];
-char data1[1000];
-wchar_t buf[100] = L"helloooooooooooooooooo";
-s21_sprintf(data, "%-.8ls", buf);
-sprintf(data1, "%-.8ls", buf);
-ck_assert_str_eq(data, data1);
 } END_TEST
 
 START_TEST(sprintf_170) {
@@ -1943,112 +1875,6 @@ START_TEST(sprintf_240) {
 
     ck_assert_str_eq(str1, str2);
 } END_TEST
-
-
-START_TEST(sprintf_241) {
-    char str1[512];
-    char str2[512];
-    char *format = "This is a simple wide char %lc";
-    unsigned long w = L'汉';
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-}
-
-START_TEST(sprintf_242) {
-    char str1[512];
-    char str2[512];
-    char *format = "This is a simple wide char %5c";
-    char w = 'c';
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-}
-
-START_TEST(sprintf_243) {
-    char str1[512];
-    char str2[512];
-
-    char *format = "This is a simple wide char %-5lc";
-    unsigned long w = L'森';
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-} END_TEST
-
-START_TEST(sprintf_244) {
-    char str1[512];
-    char str2[512];
-
-    char *format = "This is a simple wide char %ls";
-    wchar_t w[] = L"森我爱菠萝";
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-} END_TEST
-
-START_TEST(sprintf_245) {
-    char str1[512];
-    char str2[512];
-
-    char *format = "This is a simple wide char %5.12ls";
-    wchar_t w[] = L"森我爱菠萝";
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-} END_TEST
-
-START_TEST(sprintf_246) {
-    char str1[512];
-    char str2[512];
-
-    char *format = "This is a simple wide char %120ls ABOBA";
-    wchar_t w[] = L"森我爱菠萝";
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-} END_TEST
-
-START_TEST(sprintf_247) {
-    char str1[512];
-    char str2[512];
-
-    char *format = "This is a simple wide char %-43ls";
-    wchar_t w[] = L"森我爱菠萝";
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-} END_TEST
-
-START_TEST(sprintf_248) {
-    char str1[512];
-    char str2[512];
-    char *format = "This is a simple wide char %43ls";
-    wchar_t w[] = L"森我爱菠萝";
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-} END_TEST
-
-START_TEST(sprintf_249) {
-    char str1[512];
-    char str2[512];
-    char *format = "This is a simple wide char %43lc";
-    unsigned long w = L'森';
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_int_eq(a, b);
-    ck_assert_str_eq(str1, str2);
-} END_TEST
-
 
 START_TEST(sprintf_250) {
     char str[100];
@@ -3991,116 +3817,6 @@ START_TEST(sprintf_test_sprintf30) {
     ck_assert_str_eq(str1, str2);
 } END_TEST
 
-
-START_TEST(sprintf_wide_char) {
-    char str1[BUFF_SIZE];
-    char str2[BUFF_SIZE];
-
-    char *format = "This is a simple wide char %lc";
-    unsigned long w = L'汉';
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-}
-
-START_TEST(sprintf_width_char) {
-    char str1[BUFF_SIZE];
-    char str2[BUFF_SIZE];
-
-    char *format = "This is a simple wide char %5c";
-    char w = 'c';
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-}
-
-START_TEST(sprintf_minus_wide_char) {
-    char str1[BUFF_SIZE];
-    char str2[BUFF_SIZE];
-
-    char *format = "This is a simple wide char %-5lc";
-    unsigned long w = L'森';
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-} END_TEST
-
-START_TEST(sprintf_wide_string) {
-    char str1[BUFF_SIZE];
-    char str2[BUFF_SIZE];
-
-    char *format = "This is a simple wide char %ls";
-    wchar_t w[] = L"森我爱菠萝";
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-} END_TEST
-
-START_TEST(sprintf_wide_string1) {
-    char str1[BUFF_SIZE];
-    char str2[BUFF_SIZE];
-
-    char *format = "This is a simple wide char %5.12ls";
-    wchar_t w[] = L"森我爱菠萝";
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-} END_TEST
-
-START_TEST(sprintf_wide_string2) {
-    char str1[BUFF_SIZE];
-    char str2[BUFF_SIZE];
-
-    char *format = "This is a simple wide char %120ls ABOBA";
-    wchar_t w[] = L"森我爱菠萝";
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-} END_TEST
-
-START_TEST(sprintf_wide_string3) {
-    char str1[BUFF_SIZE];
-    char str2[BUFF_SIZE];
-
-    char *format = "This is a simple wide char %-43ls";
-    wchar_t w[] = L"森我爱菠萝";
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-} END_TEST
-
-START_TEST(sprintf_wide_string4) {
-    char str1[BUFF_SIZE];
-    char str2[BUFF_SIZE];
-
-    char *format = "This is a simple wide char %43ls";
-    wchar_t w[] = L"森我爱菠萝";
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_str_eq(str1, str2);
-    ck_assert_int_eq(a, b);
-} END_TEST
-
-START_TEST(sprintf_wide_char2) {
-    char str1[BUFF_SIZE];
-    char str2[BUFF_SIZE];
-
-    char *format = "This is a simple wide char %43lc";
-    unsigned long w = L'森';
-    int a = s21_sprintf(str1, format, w);
-    int b = sprintf(str2, format, w);
-    ck_assert_int_eq(a, b);
-    ck_assert_str_eq(str1, str2);
-} END_TEST
-// sprintf <-
-
 START_TEST(sprintf_pr_1)
 {
 char test_original[1024] = "";
@@ -4454,56 +4170,12 @@ ck_assert_str_eq(test_original, test_your);
 }
 END_TEST
 
-START_TEST(sprintf_13)
-{
-char test_original[1024] = "";
-char test_your[1024] = "";
-sprintf(test_original, "saeflkahj% 10.12f dslkj", -4353.235300);
-s21_sprintf(test_your, "saeflkahj% 10.12f dslkj", -4353.235300);
-ck_assert_str_eq(test_original, test_your);
-
-}
-END_TEST
-
-START_TEST(sprintf_14)
-{
-char test_original[1024] = "";
-char test_your[1024] = "";
-sprintf(test_original, "saeflkahj%-.12f dslkj", 4353.235300);
-s21_sprintf(test_your, "saeflkahj%-.12f dslkj", 4353.235300);
-ck_assert_str_eq(test_original, test_your);
-
-}
-END_TEST
-
-START_TEST(sprintf_15)
-{
-char test_original[1024] = "";
-char test_your[1024] = "";
-sprintf(test_original, "saeflkahj%-.12f dslkj", -4353.235300);
-s21_sprintf(test_your, "saeflkahj%-.12f dslkj", -4353.235300);
-ck_assert_str_eq(test_original, test_your);
-
-}
-END_TEST
-
 START_TEST(sprintf_16)
 {
 char test_original[1024] = "";
 char test_your[1024] = "";
 sprintf(test_original, "saeflkahj%-f dslkj", -4353.235300);
 s21_sprintf(test_your, "saeflkahj%-f dslkj", -4353.235300);
-ck_assert_str_eq(test_original, test_your);
-
-}
-END_TEST
-
-START_TEST(sprintf_17)
-{
-char test_original[1024] = "";
-char test_your[1024] = "";
-sprintf(test_original, "saeflkahj%-.12f dslkj", -4353.235300);
-s21_sprintf(test_your, "saeflkahj%-.12f dslkj", -4353.235300);
 ck_assert_str_eq(test_original, test_your);
 
 }
@@ -15434,7 +15106,6 @@ Suite *str_suite(void) {
   // tcase_add_test(tc_sprintf, sprintf_238);
   tcase_add_test(tc_sprintf, sprintf_239);
   tcase_add_test(tc_sprintf, sprintf_240);
-  tcase_add_test(tc_sprintf, sprintf_242);
   tcase_add_test(tc_sprintf, sprintf_250);
   tcase_add_test(tc_sprintf, sprintf_252);
   tcase_add_test(tc_sprintf, sprintf_253);

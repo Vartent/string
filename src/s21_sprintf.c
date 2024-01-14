@@ -42,10 +42,10 @@ char* print_string(char* str, flag_t* flags, va_list* input) {
     symbol = null_message;
   }
   int width_difference = 0;
-  if ((unsigned long long)flags->precision < my_strlen(symbol)) {
+  if ((unsigned long long)flags->precision < s21_strlen(symbol)) {
     width_difference = flags->width - flags->precision;
   } else {
-    width_difference = flags->width - my_strlen(symbol);
+    width_difference = flags->width - s21_strlen(symbol);
   }
   if (flags->minus == 0) {
     for (int i = 0; i < width_difference; i++) {
