@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -Werror -Wextra
 DEPS=s21_string.a
-OBJ= s21_strlen.o s21_strncpy.o s21_strncat.o s21_strstr.o s21_strncmp.o s21_strpbrk.o s21_strchr.o s21_strrchr.o
+OBJ= s21_strlen.o s21_strncpy.o s21_strncat.o s21_strstr.o s21_strncmp.o s21_strpbrk.o s21_strchr.o s21_strrchr.o s21_memchr.c s21_memcmp.c s21_memcpy.c s21_memset.c s21_strtok.o
 LIBS=-lcheck -lm -lpthread
 GCOV=gcov
 LCOV=lcov

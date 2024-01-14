@@ -520,10 +520,72 @@ START_TEST(test_memset_zero_value) {
 }
 END_TEST
 
+// strtok
+
+START_TEST(test_strtok_multiple_delimiters) {
+  char str[] = "Hello;World,Test;test";
+  const char delimiters[] = ";,";
+  char *token_s21 = s21_strtok(strdup(str), delimiters);
+  char *token_orig = strtok(strdup(str), delimiters);
+
+  while (token_s21 != NULL && token_orig != NULL) {
+    ck_assert_str_eq(token_s21, token_orig);
+    token_s21 = s21_strtok(NULL, delimiters);
+    token_orig = strtok(NULL, delimiters);
+  }
+
+  ck_assert_ptr_eq(token_s21, token_orig);
+  free(token_s21);
+  free(token_orig);
+}
+END_TEST
+START_TEST(test_strtok_empty_tokens) {
+  const char str[] = ",,,";
+  const char delimiters[] = ",";
+  char *token_s21 = s21_strtok(strdup(str), delimiters);
+  char *token_orig = strtok(strdup(str), delimiters);
+
+  ck_assert_ptr_eq(token_s21, token_orig);
+}
+END_TEST
+START_TEST(test_strtok_no_delimiters) {
+  const char str[] = "HelloWorldTest";
+  const char delimiters[] = ",";
+  char *token_s21 = s21_strtok(strdup(str), delimiters);
+  char *token_orig = strtok(strdup(str), delimiters);
+
+  ck_assert_str_eq(token_s21, token_orig);
+
+  free(token_s21);
+  free(token_orig);
+}
+END_TEST
+START_TEST(test_strtok_null_string) {
+  const char delimiters[] = ",";
+  char *token_s21 = s21_strtok(NULL, delimiters);
+  char *token_orig = strtok(NULL, delimiters);
+
+  ck_assert_ptr_eq(token_s21, token_orig);
+}
+END_TEST
+START_TEST(test_strtok_basic) {
+  const char str[] = "Hello,World,Test";
+  const char delimiters[] = ",";
+  char *token_s21 = s21_strtok(strdup(str), delimiters);
+  char *token_orig = strtok(strdup(str), delimiters);
+  while (token_s21 != NULL && token_orig != NULL) {
+    ck_assert_str_eq(token_s21, token_orig);
+    token_s21 = s21_strtok(NULL, delimiters);
+    token_orig = strtok(NULL, delimiters);
+  }
+}
+END_TEST
+
 Suite *str_suite(void) {
   Suite *s;
   TCase *tc_strlen, *tc_strncpy, *tc_strncat, *tc_strstr, *tc_strncmp,
-      *tc_strcspn, *tc_strbrk, *tc_strchr, *tc_strrchr, *tc_memchr, *tc_memcpy, *tc_memcmp, *tc_memset;
+      *tc_strcspn, *tc_strbrk, *tc_strchr, *tc_strrchr, *tc_memchr, *tc_memcpy,
+      *tc_memcmp, *tc_memset, *tc_strtok;
 
   s = suite_create("String");
 
@@ -640,6 +702,15 @@ Suite *str_suite(void) {
   tcase_add_test(tc_memset, test_memset_partial_len);
   tcase_add_test(tc_memset, test_memset_zero_value);
   suite_add_tcase(s, tc_memset);
+
+  // strtok
+  tc_strtok = tcase_create("s21_strtok");
+  tcase_add_test(tc_strtok, test_strtok_multiple_delimiters);
+  tcase_add_test(tc_strtok, test_strtok_empty_tokens);
+  tcase_add_test(tc_strtok, test_strtok_no_delimiters);
+  tcase_add_test(tc_strtok, test_strtok_null_string);
+  tcase_add_test(tc_strtok, test_strtok_basic);
+  suite_add_tcase(s, tc_strtok);
 
   return s;
 }
