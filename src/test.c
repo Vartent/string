@@ -3944,8 +3944,7 @@ Suite *str_suite(void) {
   tcase_add_test(tc_strtok, test_strtok_basic);
   suite_add_tcase(s, tc_strtok);
 
-	// strerror
-
+  // strerror
   tc_strerror = tcase_create("s21_strerror");
   tcase_add_test(tc_strerror, test_s21_strerror);
   suite_add_tcase(s, tc_strerror);
