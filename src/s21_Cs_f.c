@@ -33,29 +33,29 @@ void *to_lower(const char *str) {
 }
 
 void *insert(const char *src, const char *str, size_t start_index) {
-    if (start_index < 0 || start_index > s21_strlen(src)) {
+    if (start_index > s21_strlen(src)) {
         return S21_NULL;
     }
     char *new_str = malloc(s21_strlen(src) + s21_strlen(str) + 1);
-    if (!new_str) {
-        return S21_NULL;
-    }
+    // if (!new_str) {
+    //     return S21_NULL;
+    // }
     s21_strncpy(new_str, src, start_index);
     s21_strncpy(new_str + start_index, str, s21_strlen(str));
     s21_strncpy(new_str + start_index + s21_strlen(str), src + start_index, s21_strlen(src + start_index));
     return new_str;
 }
 
-int main() {
-  const char *str = "qwertyuiopasdfghjklzxcvbnm";
-  const char *str1 = "QWERTYUIOPASDFGHJKLZXCVBNM";
-  char *upper_str = to_upper(str);
-  char *lowe_str = to_lower(str1);
-  char *inserted = insert(str, str1, 5);
-  printf("%s\n", upper_str);
-  printf("%s\n", lowe_str);
-  printf("%s\n", inserted);
-  free(upper_str);
-  free(lowe_str);
-  return 0;
-}
+// int main() {
+//   const char *str = "qwertyuiopasdfghjklzxcvbnm";
+//   const char *str1 = "QWERTYUIOPASDFGHJKLZXCVBNM";
+//   char *upper_str = to_upper(str);
+//   char *lowe_str = to_lower(str1);
+//   char *inserted = insert(str, str1, 5);
+//   printf("%s\n", upper_str);
+//   printf("%s\n", lowe_str);
+//   printf("%s\n", inserted);
+//   free(upper_str);
+//   free(lowe_str);
+//   return 0;
+// }
