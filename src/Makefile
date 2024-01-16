@@ -1,33 +1,24 @@
 CC=gcc
-CFLAGS=-Wall -Werror -Wextra
-DEPS=s21_string.a
-OBJ= s21_strlen.o s21_strncpy.o s21_strncat.o s21_strstr.o s21_strncmp.o s21_strpbrk.o s21_strchr.o s21_strrchr.o s21_memchr.c s21_memcmp.c s21_memcpy.c s21_memset.c s21_strtok.o
-LIBS=-lcheck -lm -lpthread
-GCOV=gcov
-LCOV=lcov
-GENHTML=genhtml
+CFLAGS= -Wall -Wextra -Werror -std=c11 -pedantic 
+OBJ= s21_memchr.o s21_memcmp.o s21_memcpy.o s21_memset.o s21_strchr.o s21_strlen.o s21_strncat.o s21_strncmp.o s21_strncpy.o s21_strpbrk.o s21_strrchr.o s21_strstr.o s21_strtok.o
 
-all: test $(DEPS)
+all: s21_string.a test 
 
-%.o: %.c %.h
-	$(CC) -c -o $@ $< $(CFLAGS)
+s21_string.a: $(OBJ)
+	ar rcs s21_string.a $(OBJ)
+	rm -rf ./*.o
 
-all: $(DEPS)
+test: 
+	$(CC) $(CFLAGS) -g test.c s21_*.c -o test $(LIBS)
 
-$(DEPS): $(OBJ)
-	ar rcs $(DEPS) $(OBJ)
-
-test: $(DEPS)
-	$(CC) $(CFLAGS) -g test.c s21_*.c -o test -std=c11 $(LIBS)
-
-gcov_report: $(DEPS)
-	$(CC) $(CFLAGS) *.c --coverage -o test -std=c11 $(LIBS)
+gcov_report:
+	$(CC) $(CFLAGS) *.c --coverage -o test $(LIBS)
 	./test
-	$(GCOV) *.c
-	$(LCOV) -t "test" -o result.info -c -d .
-	$(GENHTML) -o ./report result.info
+	gcov *.c
+	lcov -t "test" -o result.info -c -d .
+	genhtml -o ./report result.info
 	open ./report/index.html
-
+	rm -rf *.gcda *.gcno *.gcov
 lcov:
 	brew install lcov
 

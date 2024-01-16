@@ -1,9 +1,9 @@
 #ifndef _S21_STRING_H_
 #define _S21_STRING_H_
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 
 #ifndef _S21_SIZE_T
 #define s21_size_t unsigned long long
@@ -30,5 +30,6 @@ char *s21_strstr(char *haystack, char *needle);
 char *s21_strtok(char *str, const char *delim);
 int s21_sprintf(char *str, const char *format, ...);
 // int s21_sscanf(const char *str, const char *format, ...);
-
+void *to_upper(const char *str);
+void *to_lower(const char *str);
 #endif
