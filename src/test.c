@@ -3476,13 +3476,67 @@ START_TEST(test_s21_strerror) {
 }
 END_TEST
 
+// to_upper
+
+START_TEST(test_to_upper) {
+  char *str = "Hello World";
+  char *result = to_upper(str);
+  ck_assert_str_eq(result, "HELLO WORLD");
+  free(result);
+}
+END_TEST
+
+// to_lower
+
+START_TEST(test_to_lower) {
+  char *str = "Hello World";
+  char *result = to_lower(str);
+  ck_assert_str_eq(result, "hello world");
+  free(result);
+}
+END_TEST
+
+// insert
+
+START_TEST(test_insert) {
+  char *src = "Hello World";
+  char *str = ", Beautiful";
+  char *result = insert(src, str, 5);
+  ck_assert_str_eq(result, "Hello, Beautiful World");
+  free(result);
+}
+END_TEST
+
+START_TEST(test_insert_start_index_out_of_range) {
+  char *src = "Hello World";
+  char *str = ", Beautiful";
+  char *result = insert(src, str, 50); // start_index is greater than length of src
+  ck_assert_ptr_eq(result, NULL);
+}
+END_TEST
+
+
 Suite *str_suite(void) {
   Suite *s;
   TCase *tc_strlen, *tc_strncpy, *tc_strncat, *tc_strstr, *tc_strncmp,
       *tc_strcspn, *tc_strbrk, *tc_strchr, *tc_strrchr, *tc_memchr, *tc_memcpy,
-      *tc_memcmp, *tc_memset, *tc_strtok, *tc_sprintf, *tc_strerror;
+      *tc_memcmp, *tc_memset, *tc_strtok, *tc_sprintf, *tc_strerror, *tc_to_lower, *tc_to_upper, *tc_insert;
 
   s = suite_create("String");
+
+  tc_to_lower = tcase_create("to_lower");
+  tcase_add_test(tc_to_lower, test_to_lower);
+
+  tc_to_upper = tcase_create("to_upper");
+  tcase_add_test(tc_to_upper, test_to_upper);
+
+  tc_insert = tcase_create("insert");
+  tcase_add_test(tc_insert, test_insert);
+  tcase_add_test(tc_insert, test_insert_start_index_out_of_range);
+
+  suite_add_tcase(s, tc_to_lower);
+  suite_add_tcase(s, tc_to_upper);
+  suite_add_tcase(s, tc_insert);
 
   // sprintf
   tc_sprintf = tcase_create("s21_sprintf");
