@@ -49,7 +49,7 @@ void *insert(const char *src, const char *str, size_t start_index) {
 
 int find_start_index(const char *src, const char *trim_chars) {
   int index = -1;
-  if (trim_chars == "") trim_chars = " ";
+  if (trim_chars == S21_NULL) trim_chars = " ";
   for (int i = 0; src[i] != 0; i++) {
     int match = 0;
     for (int j = 0; trim_chars[j]; j++) {
@@ -66,7 +66,7 @@ int find_start_index(const char *src, const char *trim_chars) {
 int find_end_index(const char *src, const char *trim_chars) {
   int index = -1;
   int i = strlen(src) - 1;
-  if (trim_chars == "") trim_chars = " ";
+  if (trim_chars == S21_NULL) trim_chars = " ";
   for (; i >= 0; i--) {
     int match = 0;
     for (int j = 0; trim_chars[j]; j++) {
