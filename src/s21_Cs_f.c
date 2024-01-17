@@ -33,29 +33,59 @@ void *to_lower(const char *str) {
 }
 
 void *insert(const char *src, const char *str, size_t start_index) {
-    if (start_index < 0 || start_index > s21_strlen(src)) {
-        return S21_NULL;
-    }
-    char *new_str = malloc(s21_strlen(src) + s21_strlen(str) + 1);
-    if (!new_str) {
-        return S21_NULL;
-    }
-    s21_strncpy(new_str, src, start_index);
-    s21_strncpy(new_str + start_index, str, s21_strlen(str));
-    s21_strncpy(new_str + start_index + s21_strlen(str), src + start_index, s21_strlen(src + start_index));
-    return new_str;
+  if (start_index < 0 || start_index > s21_strlen(src)) {
+    return S21_NULL;
+  }
+  char *new_str = malloc(s21_strlen(src) + s21_strlen(str) + 1);
+  if (!new_str) {
+    return S21_NULL;
+  }
+  s21_strncpy(new_str, src, start_index);
+  s21_strncpy(new_str + start_index, str, s21_strlen(str));
+  s21_strncpy(new_str + start_index + s21_strlen(str), src + start_index,
+              s21_strlen(src + start_index));
+  return new_str;
 }
 
-int main() {
-  const char *str = "qwertyuiopasdfghjklzxcvbnm";
-  const char *str1 = "QWERTYUIOPASDFGHJKLZXCVBNM";
-  char *upper_str = to_upper(str);
-  char *lowe_str = to_lower(str1);
-  char *inserted = insert(str, str1, 5);
-  printf("%s\n", upper_str);
-  printf("%s\n", lowe_str);
-  printf("%s\n", inserted);
-  free(upper_str);
-  free(lowe_str);
-  return 0;
+int find_start_index(const char *src, const char *trim_chars) {
+  int index = -1;
+  if (trim_chars == "") trim_chars = " ";
+  for (int i = 0; src[i] != 0; i++) {
+    int match = 0;
+    for (int j = 0; trim_chars[j]; j++) {
+      if (src[i] == trim_chars[j]) match = 1;
+    }
+    if (match != 1) {
+      index = i;
+      break;
+    }
+  }
+  return index;
+}
+
+int find_end_index(const char *src, const char *trim_chars) {
+  int index = -1;
+  int i = strlen(src) - 1;
+  if (trim_chars == "") trim_chars = " ";
+  for (; i >= 0; i--) {
+    int match = 0;
+    for (int j = 0; trim_chars[j]; j++) {
+      if (src[i] == trim_chars[j]) match = 1;
+    }
+    if (match != 1) {
+      index = i;
+      break;
+    }
+  }
+  return index;
+}
+
+void *trim(const char *src, const char *trim_chars) {
+  int start_index = find_start_index(src, trim_chars);
+  int end_index = find_end_index(src, trim_chars);
+  char *result = (char *)calloc(end_index - start_index, sizeof(char));
+  if (result != S21_NULL) {
+    s21_strncpy(result, src + start_index, end_index - start_index + 1);
+  }
+  return result;
 }
