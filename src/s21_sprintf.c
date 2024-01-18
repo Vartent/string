@@ -400,7 +400,7 @@ int s21_sprintf(char* str, const char* format, ...) {
       }
       if ((*format >= '0') && (*format <= '9')) {
         while ((*format >= '0') && (*format <= '9')) {
-          flags.width = flags.width * 10 + (*format - 48); // ?
+          flags.width = flags.width * 10 + (*format - 48);
           format++;
         }
         format--;
