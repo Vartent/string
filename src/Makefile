@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS= -Wall -Wextra -Werror -std=c11 -pedantic 
-OBJ= s21_memchr.o s21_memcmp.o s21_memcpy.o s21_memset.o s21_strchr.o s21_strlen.o s21_strncat.o s21_strncmp.o s21_strncpy.o s21_strpbrk.o s21_strrchr.o s21_strstr.o s21_strtok.o s21_Cs_f.o
+CFLAGS=-Wall -Wextra -Werror -std=c11 -pedantic
+OBJ= s21_memchr.o s21_memcmp.o s21_memcpy.o s21_memset.o s21_strchr.o s21_strlen.o s21_strncat.o s21_strncmp.o s21_strncpy.o s21_strpbrk.o s21_strrchr.o s21_strstr.o s21_strtok.o s21_Cs_f.o s21_strerror.o s21_strcspn.o s21_sprintf.o
 LIBS=-lcheck
 
 all: s21_string.a test 
@@ -35,3 +35,11 @@ everything:
 	make rebuild
 	make test
 	make gcov_report
+
+check: test
+	cppcheck --enable=all --suppress=missingIncludeSystem --inconclusive --check-config *.c *.h
+	cp ../materials/linters/.clang-format .clang-format
+	clang-format -style=Google *.h *.c -i
+	rm -rf .clang-format
+	make test
+	leaks --atExit -- test

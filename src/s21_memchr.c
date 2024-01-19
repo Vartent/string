@@ -3,12 +3,13 @@
 void *s21_memchr(const void *str, int c, s21_size_t n) {
   const unsigned char *s = (const unsigned char *)str;
   void *res = S21_NULL;
-  while (n--) {
+  while (n > 0) {
     if (*s == c) {
       res = (void *)s;
       break;
     }
     s++;
+    n--;
   }
   return res;
 }

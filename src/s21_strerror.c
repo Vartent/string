@@ -1,6 +1,7 @@
 #include "s21_string.h"
 
 #ifdef __linux__
+#define ERROR_FORMAT "Unknown error "
 #define ERROR_CODES                                                            \
   {1, "EPERM", "Operation not permitted"},                                     \
       {2, "ENOENT", "No such file or directory"},                              \
@@ -116,6 +117,7 @@
     131, "ENOTRECOVERABLE", "State not recoverable"                            \
   }
 #elif defined(__APPLE__)
+#define ERROR_FORMAT "Unknown error: "
 #define ERROR_CODES                                                            \
   {1, "EPERM", "Operation not permitted"},                                     \
       {2, "ENOENT", "No such file or directory"},                              \
@@ -218,6 +220,6 @@ char* s21_strerror(int errnum) {
   }
 
   static char unknownError[32];
-  s21_sprintf(unknownError, "Unknown error: %d", errnum);
+  s21_sprintf(unknownError, "%s%d", ERROR_FORMAT, errnum);
   return unknownError;
 }

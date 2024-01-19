@@ -6,5 +6,6 @@ int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
     str2++;
     n--;
   }
-  return (n == 0) ? 0 : *str1 - *str2;
+  int result = *str1 - *str2;
+  return (n == 0) ? 0 : result;
 }
