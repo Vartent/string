@@ -10,8 +10,11 @@ void reset_flags(flag_t* flags) {
   flags->width = 0;
 }
 
+// возвращаем строку, потому что есть флаг "-", который отогвигает текущий
+// символ. Поработав с аргументом str, мы помещаем его туда, где начали.
 char* print_char(char* str, flag_t* flags, char type, va_list* input) {
   if (flags->minus == 0) {
+    // если указана ширина, мы заполняем пробелами по ширине. Отодвигаем str
     for (int i = 0; i < flags->width - 1; i++) {
       *str = ' ';
       str++;
@@ -41,18 +44,23 @@ char* print_string(char* str, flag_t* flags, va_list* input) {
     char* null_message = "(null)";
     symbol = null_message;
   }
+  // рассматриваются ситуации, когда длина строки меньше пресижна, т.к. если
+  // меньше, то остаток надо заполнить пробелами
   int width_difference = 0;
   if ((unsigned long long)flags->precision < s21_strlen(symbol)) {
-    width_difference = flags->width - flags->precision;
+    width_difference = flags->width - flags->precision;  // по модулю результат?
   } else {
     width_difference = flags->width - s21_strlen(symbol);
   }
+  // width_difference - колисество отступов, которое мы получили в зависимости
+  // от условия. если оно < 0, то отступы мы не печатаем
   if (flags->minus == 0) {
     for (int i = 0; i < width_difference; i++) {
       *str = ' ';
       str++;
     }
   }
+  // тута мы печатаем либо до максимальной длины строки (precision) либо до '\0'
   for (unsigned int i = 0;
        (i < (unsigned)flags->precision) && (symbol[i] != '\0'); i++) {
     *str = symbol[i];
@@ -254,6 +262,9 @@ void ftostr(char* str, double num, flag_t* flags) {
   }
 
   // for rounding purposes
+  // если подается число точностью больше, чем заданная в flags->precision, то
+  // мы должны округлить его до указанной точности, поэтому мы прибавляем малое
+  // значение, которое меньше, чем указанная точность
   if (num < 0.0) {
     num -= 5.0 / my_pow(10, flags->precision + 1);
   } else {
@@ -261,14 +272,23 @@ void ftostr(char* str, double num, flag_t* flags) {
   }
 
   // set sing of a number and adjust width accordingly
+  // поскольку мы печатаем число, возможно, что придется печатать знак,
+  // если есть флаг "+", то нужно напечатать знак даже у положительного числа
+
   int sign = 0;
-  if (num < 0) {
+  if (num < 0) {  // если число положительное, то печатаем знак так или иначе, и
+                  // съедается один символ из width
     sign = -1;
     flags->width--;
-  } else if (flags->plus == 1) {
+  } else if (flags->plus ==
+             1) {  // если есть знак "+", то потом будем печатать знак даже у
+                   // положительного числа, съедаем символ
+    // у ширины
     sign = 1;
     flags->width--;
-  } else if (flags->space == 1) {
+  } else if (flags->space ==
+             1) {  // если есть " " флаг пробел, то знак + у положительного не
+                   // печатаем, но вместо него поставим пробел
     flags->width--;
   }
 
@@ -371,7 +391,7 @@ int s21_sprintf(char* str, const char* format, ...) {
       format++;
     } else {
       if (*format == 'c' || *format == '%') {
-        str = print_char(str, &flags, *format, &input);
+        str = print_char(str, &flags, *format, &input);  // зачем присваем к str
         spec_found = 1;
       }
       if (*format == 's') {
