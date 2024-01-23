@@ -304,7 +304,7 @@ void ftostr(char* str, double num, flag_t* flags) {
     num_of_digits++;
     complete_part = complete_part / 10;
   }
-  complete_part = num;
+  complete_part = num;  // после того, как дошли до нуля надо вернуть как было
   int width_difference = flags->width - (num_of_digits + flags->precision);
 
   if (flags->precision != 0) {

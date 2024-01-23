@@ -3836,7 +3836,7 @@ END_TEST
 
 START_TEST(test_to_upper) {
   char *str = "Hello World";
-  char *result = to_upper(str);
+  char *result = s21_to_upper(str);
   ck_assert_str_eq(result, "HELLO WORLD");
   free(result);
 }
@@ -3846,7 +3846,7 @@ END_TEST
 
 START_TEST(test_to_lower) {
   char *str = "Hello World";
-  char *result = to_lower(str);
+  char *result = s21_to_lower(str);
   ck_assert_str_eq(result, "hello world");
   free(result);
 }
@@ -3857,7 +3857,7 @@ END_TEST
 START_TEST(test_insert) {
   char *src = "Hello World";
   char *str = ", Beautiful";
-  char *result = insert(src, str, 5);
+  char *result = s21_insert(src, str, 5);
   ck_assert_str_eq(result, "Hello, Beautiful World");
   free(result);
 }
@@ -3867,7 +3867,7 @@ START_TEST(test_insert_start_index_out_of_range) {
   char *src = "Hello World";
   char *str = ", Beautiful";
   char *result =
-      insert(src, str, 50);  // start_index is greater than length of src
+      s21_insert(src, str, 50);  // start_index is greater than length of src
   ck_assert_ptr_eq(result, NULL);
 }
 END_TEST
@@ -3876,7 +3876,7 @@ END_TEST
 
 START_TEST(test_trim_spaces) {
   char *src = "  Hello World ";
-  char *result = trim(src, " ");
+  char *result = s21_trim(src, " ");
   ck_assert_str_eq(result, "Hello World");
   free(result);
 }
@@ -3884,7 +3884,7 @@ END_TEST
 
 START_TEST(test_trim_no_chars_to_trim) {
   char *src = "Hello World";
-  char *result = trim(src, "");
+  char *result = s21_trim(src, "");
   ck_assert_str_eq(result, "Hello World");
   free(result);
 }
@@ -3892,7 +3892,7 @@ END_TEST
 
 START_TEST(test_trim_all_chars_to_trim) {
   char *src = "   ";
-  char *result = trim(src, " ");
+  char *result = s21_trim(src, " ");
   ck_assert_str_eq(result, "");
   free(result);
 }
@@ -3900,7 +3900,7 @@ END_TEST
 
 START_TEST(test_trim_empty_string) {
   char *src = "";
-  char *result = trim(src, " ");
+  char *result = s21_trim(src, " ");
   ck_assert_str_eq(result, "");
   free(result);
 }
@@ -3908,7 +3908,7 @@ END_TEST
 
 START_TEST(test_trim_point) {
   char *src = "............Hello World.";
-  char *result = trim(src, ".");
+  char *result = s21_trim(src, ".");
   ck_assert_str_eq(result, "Hello World");
   free(result);
 }
